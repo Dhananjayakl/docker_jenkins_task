@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent "docker-agent"
 
     environment {
         GIT_REPO = 'https://github.com/Dhananjayakl/docker_jenkins_task.git'
