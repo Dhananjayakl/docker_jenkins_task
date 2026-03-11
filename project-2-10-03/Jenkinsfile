@@ -1,0 +1,42 @@
+pipeline {
+    agent {
+        label 'docker-agent'
+    }
+
+    environment {
+        GIT_REPO = 'https://github.com/Dhananjayakl/docker_jenkins_task.git'
+        BRANCH = 'main'
+        IMAGE_NAME = 'project-2-image'
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: BRANCH, url: GIT_REPO
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('project-2-10-03') {
+                    sh 'docker build -t $IMAGE_NAME .'
+                }
+            }
+        }
+
+        stage('Run') {
+            steps {
+                dir('project-2-10-03') {
+                    sh 'docker run -d --name $IMAGE_NAME -p 80:80 $IMAGE_NAME'
+                }
+            }
+        }
+
+        stage('Push') {
+            steps {
+                sh 'docker tag $IMAGE_NAME my-dockerhub/$IMAGE_NAME'
+                sh 'docker push my-dockerhub/$IMAGE_NAME'
+            }
+        }
+    }
+}
