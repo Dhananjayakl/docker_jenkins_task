@@ -1,12 +1,12 @@
 pipeline {
     agent {
-        label 'docker-agent'
+        label 'docker'
     }
 
     environment {
         GIT_REPO = 'https://github.com/Dhananjayakl/docker_jenkins_task.git'
         BRANCH = 'main'
-        IMAGE_NAME = 'project-3-image'
+        IMAGE_NAME = 'project-3-main.go'
     }
 
     stages {
@@ -19,7 +19,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir('project-3-10-03') {
-                    sh 'docker build -t $IMAGE_NAME .'
+                    sh 'sudo docker build -t $IMAGE_NAME .'
                 }
             }
         }
@@ -27,15 +27,15 @@ pipeline {
         stage('Run') {
             steps {
                 dir('project-3-10-03') {
-                    sh 'docker run -d --name $IMAGE_NAME -p 80:80 $IMAGE_NAME'
+                    sh 'sudo docker run -d --name $IMAGE_NAME -p 80:80 $IMAGE_NAME'
                 }
             }
         }
 
         stage('Push') {
             steps {
-                sh 'docker tag $IMAGE_NAME my-dockerhub/$IMAGE_NAME'
-                sh 'docker push my-dockerhub/$IMAGE_NAME'
+                sh 'sudo docker tag $IMAGE_NAME dhananjay93/$IMAGE_NAME'
+                sh 'sudo docker push dhananjay93/$IMAGE_NAME'
             }
         }
     }
