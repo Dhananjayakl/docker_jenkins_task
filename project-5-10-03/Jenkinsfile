@@ -6,7 +6,7 @@ pipeline {
     environment {
         GIT_REPO = 'https://github.com/Dhananjayakl/docker_jenkins_task.git'
         BRANCH = 'main'
-        IMAGE_NAME = 'project-5-rust'
+        IMAGE_NAME = 'project-5-nginx'
     }
 
     stages {
