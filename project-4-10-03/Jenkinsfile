@@ -27,7 +27,7 @@ pipeline {
         stage('Run') {
             steps {
                 dir('project-4-10-03') {
-                    sh 'sudo docker run -d --name $IMAGE_NAME -p 80:80 $IMAGE_NAME'
+                    sh 'sudo docker run -d --name $IMAGE_NAME -p 83:80 $IMAGE_NAME'
                 }
             }
         }
