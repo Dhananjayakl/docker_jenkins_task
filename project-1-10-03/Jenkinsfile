@@ -19,7 +19,9 @@ pipeline {
         stage('Build') {
             steps {
                 dir('project-1-10-03') {
+                timeout(time: 20, unit: 'MINUTES') {
                     sh 'sudo docker build -t $IMAGE_NAME .'
+                }
                 }
             }
         }
