@@ -1,5 +1,5 @@
 # Dockerfile for project-4
-FROM openjdk:11-jdk-slim
+FROM eclipse-temurin:11-jdk
 WORKDIR /app
 COPY . /app
 CMD ["java", "-jar", "app.jar"]
