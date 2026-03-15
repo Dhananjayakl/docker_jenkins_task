@@ -1,0 +1,46 @@
+pipeline {
+    agent {
+        label 'docker'
+    }
+
+    environment {
+        GIT_REPO = 'https://github.com/Dhananjayakl/docker_jenkins_task.git'
+        BRANCH = 'main'
+        IMAGE_NAME = 'flask_app'
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: BRANCH, url: GIT_REPO
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('assignment-6') {
+                timeout(time: 20, unit: 'MINUTES') {
+                    sh 'sudo docker build -t $IMAGE_NAME .'
+                }
+                }
+            }
+        }
+
+        stage('Run') {
+            steps {
+                dir('assignment-6') {
+                    sh 'docker network create app_network'
+                    sh 'docker run -d --name mysql_db --network app_network -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=testdb mysql:8'
+                    sh 'docker run -d --name web_app --network app_network -p 8081:5000 $IMAGE_NAME'
+                }
+            }
+        }
+
+        stage('Push') {
+            steps {
+                sh 'sudo docker tag $IMAGE_NAME dhananjay93/$IMAGE_NAME'
+                sh 'sudo docker push dhananjay93/$IMAGE_NAME'
+            }
+        }
+    }
+}
