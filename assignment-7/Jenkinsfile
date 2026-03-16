@@ -1,6 +1,6 @@
 pipeline {
 
-    label 'docker'
+    agent { label 'docker' }
 
     environment {
         IMAGE_NAME = "devops-node-app"
