@@ -3,15 +3,17 @@ pipeline {
     agent { label 'docker' }
 
     environment {
+        GIT_REPO = 'https://github.com/Dhananjayakl/docker_jenkins_task.git'
+        BRANCH = 'main'
         IMAGE_NAME = "devops-node-app"
         DOCKERHUB_USERNAME = "dhananjay93"
     }
 
     stages {
 
-        stage('Clone Repository') {
+        stage('Clone') {
             steps {
-                git 'https://github.com/Dhananjayakl/docker_jenkins_task.git'
+                git branch: BRANCH, url: GIT_REPO
             }
         }
 
