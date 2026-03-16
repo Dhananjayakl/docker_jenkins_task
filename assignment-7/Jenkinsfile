@@ -1,0 +1,66 @@
+pipeline {
+
+    label 'docker'
+
+    environment {
+        IMAGE_NAME = "devops-node-app"
+        $DOCKERHUB_USERNAME = "dhananjay93"
+        $DOCKERHUB_PASSWORD = "dhanu2545"
+    }
+
+    stages {
+
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/Dhananjayakl/docker_jenkins_task.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            
+            steps {
+                dir('assignment-7') {
+                sh 'docker build -t $IMAGE_NAME:latest .'
+            }
+        }
+        }
+
+        stage('Create Docker Network') {
+            steps {
+                dir('assignment-7') {
+                sh 'docker network create app-network || true'
+            }
+        }
+        }
+
+        stage('Run Compose') {
+            steps {
+                dir('assignment-7') {
+                sh '''
+                docker-compose down || true
+                docker-compose up -d
+                '''
+            }
+            }
+        }
+
+        stage('Login to DockerHub') {
+            steps {
+                dir('assignment-7') {
+                sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
+            }
+            }
+        }
+
+        stage('Push Image') {
+            steps {
+                dir('assignment-7') {
+                sh 'sudo docker tag $IMAGE_NAME dhananjay93/$IMAGE_NAME'
+                sh 'docker push $IMAGE_NAME:latest'
+            }
+            }
+        }
+
+    }
+
+}
