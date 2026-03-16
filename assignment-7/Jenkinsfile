@@ -4,8 +4,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "devops-node-app"
-        $DOCKERHUB_USERNAME = "dhananjay93"
-        $DOCKERHUB_PASSWORD = "dhanu2545"
+        DOCKERHUB_USERNAME = "dhananjay93"
     }
 
     stages {
@@ -17,47 +16,40 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            
             steps {
                 dir('assignment-7') {
-                sh 'docker build -t $IMAGE_NAME:latest .'
+                    sh 'docker build -t $IMAGE_NAME:latest .'
+                }
             }
-        }
         }
 
         stage('Create Docker Network') {
             steps {
-                dir('assignment-7') {
                 sh 'docker network create app-network || true'
             }
-        }
         }
 
         stage('Run Compose') {
             steps {
                 dir('assignment-7') {
-                sh '''
-                docker-compose down || true
-                docker-compose up -d
-                '''
-            }
+                    sh '''
+                    docker compose down || true
+                    docker compose up -d
+                    '''
+                }
             }
         }
 
-        stage('Login to DockerHub') {
+        stage('Docker Login') {
             steps {
-                dir('assignment-7') {
-                sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
+                    sh 'docker login -u dhananjay93 -p dhanu2545'
+                }
             }
-            }
-        }
 
         stage('Push Image') {
             steps {
-                dir('assignment-7') {
-                sh 'sudo docker tag $IMAGE_NAME dhananjay93/$IMAGE_NAME'
-                sh 'docker push $IMAGE_NAME:latest'
-            }
+                sh 'docker tag $IMAGE_NAME $DOCKERHUB_USERNAME/$IMAGE_NAME:latest'
+                sh 'docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:latest'
             }
         }
 
